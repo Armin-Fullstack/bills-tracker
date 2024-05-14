@@ -88,12 +88,36 @@ fn get_input() -> Option<String> {
     }
 }
 
+// for converting string to f64, created a function
+fn get_bill_amount() -> Option<f64> {
+    println!("Enter amount:");
+   loop {
+    let input = match get_input() {
+        Some(input) => input,
+        None => return None
+    };
+
+    if &input == "" {
+        return None
+    }
+
+    let parsed_input: Result<f64, _> = input.parse();
+    match parsed_input {
+        Ok(amount) => return Some(amount),
+        Err(_) => println!("Please enter a number.")
+    }
+
+   }
+    
+}
+
+
 
 mod menu {
-    use crate::{get_input, Bill, ManageBills};
+    use crate::{get_bill_amount, get_input, Bill, ManageBills};
 
     // get name and amount from user and then add them to bill 
-   pub fn add_bill(bills: ManageBills) {
+   pub fn add_bill(bills: &mut ManageBills) {
         println!("Enter bill name:");
         // get bill name
         let name = match get_input() {
@@ -101,9 +125,8 @@ mod menu {
             None => return
         };
 
-        println!("Enter amount:");
         // get amount
-        let amount = match get_input() {
+        let amount = match get_bill_amount() {
             Some(input) => input,
             None => return
         };
@@ -127,7 +150,7 @@ fn main() {
       MainMenu::show_menu();
        let input = get_input().expect("No data entered");
         match MainMenu::from_str(&input) {
-           Some(MainMenu::AddBill) => add_bill(bills),
+           Some(MainMenu::AddBill) => add_bill(&mut bills),
            _ => ()
         }
   } 
