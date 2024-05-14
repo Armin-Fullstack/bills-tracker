@@ -64,6 +64,11 @@ impl ManageBills {
             bills: vec![]
         }
     }
+
+    // push bill to the vevctor
+    fn add(&mut self , bill: Bill) {
+        self.bills.push(bill)
+    }
 }
 
 
@@ -85,7 +90,7 @@ fn get_input() -> Option<String> {
 
 fn main() {
    MainMenu::show_menu();
-   let bills = ManageBills::new();
+   let mut bills = ManageBills::new();
 
    
 }
