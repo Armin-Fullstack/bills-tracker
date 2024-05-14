@@ -12,6 +12,8 @@
 
  //  Enter selection:
 
+use std::io;
+
 enum MainMenu {
     AddBill,
     ViewBill,
@@ -45,7 +47,22 @@ impl MainMenu {
 }
 
 
+// get user input
+fn get_input() -> Option<String> {
+    let mut buffer = String::new();
+   while io::stdin().read_line(&mut buffer).is_err() {
+        println!("Please enter your number again.")
+    }
+
+    let input = buffer.trim().to_owned();
+    if &input == "" {
+        return None
+    };
+    Some(input)
+}
+
 fn main() {
    MainMenu::show_menu();
+   
    
 }
