@@ -35,6 +35,7 @@ impl MainMenu {
         }
     }
 
+
     fn show_menu() {
         println!("== Manage Bills ==");
         println!("1. Add bill");
@@ -65,15 +66,13 @@ impl ManageBills {
         }
     }
 
-    // push bill to the vevctor
+    // push bill to the bills vector
     fn add(&mut self , bill: Bill) {
         self.bills.push(bill)
     }
 }
 
-
-
-
+    
 // get user input
 fn get_input() -> Option<String> {
     let mut buffer = String::new();
@@ -83,14 +82,53 @@ fn get_input() -> Option<String> {
 
     let input = buffer.trim().to_owned();
     if &input == "" {
-        return None
-    };
-    Some(input)
+         None
+    } else {
+        Some(input)
+    }
 }
 
-fn main() {
-   MainMenu::show_menu();
-   let mut bills = ManageBills::new();
 
-   
+mod menu {
+    use crate::{get_input, Bill, ManageBills};
+
+    // get name and amount from user and then add them to bill 
+   pub fn add_bill(bills: ManageBills) {
+        println!("Enter bill name:");
+        // get bill name
+        let name = match get_input() {
+            Some(input) => input,
+            None => return
+        };
+
+        println!("Enter amount:");
+        // get amount
+        let amount = match get_input() {
+            Some(input) => input,
+            None => return
+        };
+
+        // created a bill
+        let bill = Bill {name , amount};
+        
+        // added bill
+        bills.add(bill);
+        println!("Bill added successfully.")
+    }
+}
+
+
+fn main() {
+    use menu::add_bill;
+
+    let mut bills = ManageBills::new();
+
+  loop {
+      MainMenu::show_menu();
+       let input = get_input().expect("No data entered");
+        match MainMenu::from_str(&input) {
+           Some(MainMenu::AddBill) => add_bill(bills),
+           _ => ()
+        }
+  } 
 }
