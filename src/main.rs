@@ -47,6 +47,28 @@ impl MainMenu {
 }
 
 
+#[derive(Debug)]
+struct Bill {
+    name: String,
+    amount: f64
+}
+struct ManageBills {
+    bills: Vec<Bill>
+}
+
+
+impl ManageBills {
+    // created a new function to generate a ManageBills structure
+    fn new() -> Self {
+        Self {
+            bills: vec![]
+        }
+    }
+}
+
+
+
+
 // get user input
 fn get_input() -> Option<String> {
     let mut buffer = String::new();
@@ -63,6 +85,7 @@ fn get_input() -> Option<String> {
 
 fn main() {
    MainMenu::show_menu();
-   
+   let bills = ManageBills::new();
+
    
 }
