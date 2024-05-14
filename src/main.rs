@@ -37,6 +37,7 @@ impl MainMenu {
 
 
     fn show_menu() {
+        println!("");
         println!("== Manage Bills ==");
         println!("1. Add bill");
         println!("2. View bill");
@@ -112,7 +113,6 @@ fn get_bill_amount() -> Option<f64> {
 }
 
 
-
 mod menu {
     use crate::{get_bill_amount, get_input, Bill, ManageBills};
 
@@ -138,11 +138,21 @@ mod menu {
         bills.add(bill);
         println!("Bill added successfully.")
     }
+
+    // print all bills
+    pub fn view_bills(bills: &ManageBills) {
+        if bills.bills.is_empty() {
+            println!("There aren't any bills.")
+        }
+        for bill in &bills.bills {
+            println!("{:?}" , bill)
+        }
+    }
 }
 
 
 fn main() {
-    use menu::add_bill;
+    use menu::{add_bill , view_bills};
 
     let mut bills = ManageBills::new();
 
@@ -151,6 +161,7 @@ fn main() {
        let input = get_input().expect("No data entered");
         match MainMenu::from_str(&input) {
            Some(MainMenu::AddBill) => add_bill(&mut bills),
+           Some(MainMenu::ViewBill) => view_bills(&bills),
            _ => ()
         }
   } 
