@@ -3,6 +3,9 @@
  // I want to add bills including name and amount owed.
  // I want to view existing bills.
 
+ // Stage 2:
+ // I want to remove bills
+
  //  == Manage Bills ==
  //  1. Add bill
  //  2. View bill
@@ -12,7 +15,7 @@
 
  //  Enter selection:
 
-use std::io;
+use std::{collections::HashMap, io};
 
 enum MainMenu {
     AddBill,
@@ -55,7 +58,7 @@ struct Bill {
     amount: f64
 }
 struct ManageBills {
-    bills: Vec<Bill>
+    bills: HashMap<String , Bill>
 }
 
 
@@ -63,13 +66,21 @@ impl ManageBills {
     // created a new function to generate a ManageBills structure
     fn new() -> Self {
         Self {
-            bills: vec![]
+            bills: HashMap::new()
         }
     }
 
     // push bill to the bills vector
     fn add(&mut self , bill: Bill) {
-        self.bills.push(bill)
+        self.bills.insert(bill.name.to_owned(), bill);
+    }
+
+    fn get_all(&self) -> Vec<&Bill> {
+        self.bills.values().collect()
+    }
+    // remove bill
+    fn remove(&mut self , name: &str) -> bool {
+        self.bills.remove(name).is_some()
     }
 }
 
@@ -144,15 +155,41 @@ mod menu {
         if bills.bills.is_empty() {
             println!("There aren't any bills.")
         }
-        for bill in &bills.bills {
+        for bill in bills.get_all() {
             println!("{:?}" , bill)
         }
     }
+
+    // remove a bill base on its name
+   pub fn remove_bill(bills: &mut ManageBills) {
+    if bills.bills.is_empty() {
+        println!("You didn't add any bills yet.");
+        return
+    }
+    for bill in bills.get_all() {
+        println!("{:?}" , bill)
+    }
+    println!("Enter bill name to remove:");
+
+    let name = match get_input() {
+        Some(input) => input,
+        None => return
+    };
+
+    if bills.remove(&name) {
+        println!("The bill was removed successfully.")
+    } else {
+        println!("The bill not found.")
+    }
+
+    }
+
+    
 }
 
 
 fn main() {
-    use menu::{add_bill , view_bills};
+    use menu::{add_bill , view_bills , remove_bill};
 
     let mut bills = ManageBills::new();
 
@@ -162,7 +199,10 @@ fn main() {
         match MainMenu::from_str(&input) {
            Some(MainMenu::AddBill) => add_bill(&mut bills),
            Some(MainMenu::ViewBill) => view_bills(&bills),
+           Some(MainMenu::RemoveBill) => remove_bill(&mut bills),
            _ => ()
         }
   } 
+
+
 }
