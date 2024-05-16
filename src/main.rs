@@ -6,6 +6,10 @@
  // Stage 2:
  // I want to remove bills
 
+ // Stage 3:
+ // I want to edit existing bills.
+ // I want to go back if I change my mind.
+
  //  == Manage Bills ==
  //  1. Add bill
  //  2. View bill
@@ -82,6 +86,21 @@ impl ManageBills {
     fn remove(&mut self , name: &str) -> bool {
         self.bills.remove(name).is_some()
     }
+
+    // update bill 
+    fn update(&mut self , name: &str, amount: f64) -> bool {
+        match self.bills.get_mut(name) {
+            Some(bill) => {
+                bill.name = name.to_owned();
+                bill.amount = amount;
+                true
+            },
+            None => false
+
+        }
+    }
+
+
 }
 
     
