@@ -21,6 +21,7 @@
 
 use std::{collections::HashMap, io};
 
+
 enum MainMenu {
     AddBill,
     ViewBill,
@@ -88,8 +89,8 @@ impl ManageBills {
     }
 
     // update bill 
-    fn update(&mut self , name: &str, amount: f64) -> bool {
-        match self.bills.get_mut(name) {
+    fn update(&mut self , bill_name: &str, name: &str , amount: f64) -> bool {
+        match self.bills.get_mut(bill_name) {
             Some(bill) => {
                 bill.name = name.to_owned();
                 bill.amount = amount;
@@ -120,8 +121,8 @@ fn get_input() -> Option<String> {
 }
 
 // for converting string to f64, created a function
-fn get_bill_amount() -> Option<f64> {
-    println!("Enter amount:");
+fn get_bill_amount(text: &str) -> Option<f64> {
+    println!("{}" , text);
    loop {
     let input = match get_input() {
         Some(input) => input,
@@ -156,7 +157,7 @@ mod menu {
         };
 
         // get amount
-        let amount = match get_bill_amount() {
+        let amount = match get_bill_amount("Enter amount:") {
             Some(input) => input,
             None => return
         };
@@ -203,12 +204,46 @@ mod menu {
 
     }
 
+    pub fn update_bill(bills: &mut ManageBills) {
+        if bills.get_all().is_empty() {
+            println!("There aren't any bills to update.");
+            return
+        }
+
+        for bill in bills.get_all() {
+            println!("{:?}" , bill)
+        }
+
+        println!("Enter bill name:");
+        let bill_name = match get_input() {
+            Some(name) => name,
+            None => return
+        };
+        println!("Enter new name:");
+        let new_bill_name = match get_input() {
+            Some(name) => name,
+            None => return
+        };
+
+        let new_bill_amount = match get_bill_amount("Enter new amount:") {
+            Some(amount) => amount,
+            None => return
+        };
+
+        if bills.update(&bill_name , &new_bill_name, new_bill_amount) {
+            println!("The bill was updated successfully");
+        } else {
+            println!("The bill not found.")
+        }
+
+    }
+
     
 }
 
 
 fn main() {
-    use menu::{add_bill , view_bills , remove_bill};
+    use menu::{add_bill , view_bills , remove_bill, update_bill};
 
     let mut bills = ManageBills::new();
 
@@ -219,6 +254,7 @@ fn main() {
            Some(MainMenu::AddBill) => add_bill(&mut bills),
            Some(MainMenu::ViewBill) => view_bills(&bills),
            Some(MainMenu::RemoveBill) => remove_bill(&mut bills),
+           Some(MainMenu::UpdateBill) => update_bill(&mut bills),
            _ => ()
         }
   } 
