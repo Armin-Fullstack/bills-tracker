@@ -266,23 +266,28 @@ mod menu {
 }
 
 
-fn main() {
+fn run_program() -> Option<()> {
     use menu::{add_bill , view_bills , remove_bill, update_bill, total_bill};
 
     let mut bills = ManageBills::new();
 
   loop {
       MainMenu::show_menu();
-       let input = get_input().expect("No data entered");
+       let input = get_input()?;
         match MainMenu::from_str(&input) {
            Some(MainMenu::AddBill) => add_bill(&mut bills),
            Some(MainMenu::ViewBill) => view_bills(&bills),
            Some(MainMenu::RemoveBill) => remove_bill(&mut bills),
            Some(MainMenu::UpdateBill) => update_bill(&mut bills),
            Some(MainMenu::TotalBill) => total_bill(&bills),
-           _ => ()
+           None => break
         }
   } 
+  
+  None
+}
 
 
+fn main() {
+   run_program();
 }
