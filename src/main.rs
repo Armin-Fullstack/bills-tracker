@@ -238,12 +238,26 @@ mod menu {
 
     }
 
-    
+    // calculate total bills
+    pub fn total_bill(bills: &ManageBills) {
+        if bills.get_all().is_empty() {
+            println!("There aren't any bills.");
+            return
+        }
+        let mut total_bills = 0.0;
+        for bill in bills.get_all() {
+            total_bills  += bill.amount
+        }
+        println!("total bills: {:?}" , total_bills)
+
+    }
+
+
 }
 
 
 fn main() {
-    use menu::{add_bill , view_bills , remove_bill, update_bill};
+    use menu::{add_bill , view_bills , remove_bill, update_bill, total_bill};
 
     let mut bills = ManageBills::new();
 
@@ -255,6 +269,7 @@ fn main() {
            Some(MainMenu::ViewBill) => view_bills(&bills),
            Some(MainMenu::RemoveBill) => remove_bill(&mut bills),
            Some(MainMenu::UpdateBill) => update_bill(&mut bills),
+           Some(MainMenu::TotalBill) => total_bill(&bills),
            _ => ()
         }
   } 
