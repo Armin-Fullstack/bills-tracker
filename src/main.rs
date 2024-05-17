@@ -143,9 +143,17 @@ fn get_bill_amount(text: &str) -> Option<f64> {
     
 }
 
+// check if there are any bills
+fn is_bills_empty(bills: &ManageBills) -> bool {
+    if bills.get_all().is_empty() {
+        println!("There aren't any bills.");
+        return true;
+    }
+    false
+}
 
 mod menu {
-    use crate::{get_bill_amount, get_input, Bill, ManageBills};
+    use crate::{get_bill_amount, get_input, is_bills_empty ,  Bill, ManageBills};
 
     // get name and amount from user and then add them to bill 
    pub fn add_bill(bills: &mut ManageBills) {
@@ -172,20 +180,23 @@ mod menu {
 
     // print all bills
     pub fn view_bills(bills: &ManageBills) {
-        if bills.bills.is_empty() {
-            println!("There aren't any bills.")
+        if is_bills_empty(bills) {
+            return;
         }
         for bill in bills.get_all() {
             println!("{:?}" , bill)
         }
+
+        println!("Hi")
     }
 
     // remove a bill base on its name
    pub fn remove_bill(bills: &mut ManageBills) {
-    if bills.bills.is_empty() {
-        println!("You didn't add any bills yet.");
-        return
+    
+    if is_bills_empty(bills) {
+        return;
     }
+
     for bill in bills.get_all() {
         println!("{:?}" , bill)
     }
@@ -205,10 +216,9 @@ mod menu {
     }
 
     pub fn update_bill(bills: &mut ManageBills) {
-        if bills.get_all().is_empty() {
-            println!("There aren't any bills to update.");
-            return
-        }
+       if is_bills_empty(bills) {
+        return;
+       }
 
         for bill in bills.get_all() {
             println!("{:?}" , bill)
@@ -240,10 +250,10 @@ mod menu {
 
     // calculate total bills
     pub fn total_bill(bills: &ManageBills) {
-        if bills.get_all().is_empty() {
-            println!("There aren't any bills.");
-            return
+        if is_bills_empty(bills) {
+            return;
         }
+
         let mut total_bills = 0.0;
         for bill in bills.get_all() {
             total_bills  += bill.amount
